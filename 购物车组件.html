@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车逻辑</title>
+</head>
+<script src="./js/vue.js"></script>
+<style>
+    #app {
+        width: 700px;
+    }
+
+    #app ul li {
+        height: 30px;
+        line-height: 30px;
+    }
+
+    #app ul li div {
+        float: right;
+    }
+</style>
+
+<body>
+    <div id="box">
+        <shopingcar></shopingcar>
+    </div>
+
+</body>
+<script>
+    Vue.component("shopingcar", {
+        template: `
+        <div id="app">
+        <ul>
+            <input type="checkbox" @change="handelAllchecked()" v-model="isChecked">全选
+            <li v-for="data in datalist">
+                <input type="checkbox" v-model="checkgroup" :value="data" @change="handelJudge">
+                {{data}}
+                <div>
+                    <button @click="handleDel(data)">-</button>
+                    &nbsp;{{data.number}}&nbsp;
+                    <button @click="data.number++">+</button>
+                </div>
+            </li>
+        </ul>
+        总价格：{{getSum()}}
+        </div>`,
+        data() {
+            return {
+                checkgroup: [],
+                datalist: [{
+                        title: "幻想药",
+                        price: 70,
+                        number: 1
+                    },
+                    {
+                        title: "猫大胖坐骑",
+                        price: 228,
+                        number: 2
+                    },
+                    {
+                        title: "纯白套装",
+                        price: 128,
+                        number: 2
+                    },
+                    {
+                        title: "情感表情-装死",
+                        price: 48,
+                        number: 1
+                    }
+                ],
+                isChecked: false,
+            }
+        },
+        methods: {
+            getSum() {
+                var sum = 0;
+                for (i in this.checkgroup) {
+                    sum += this.checkgroup[i].price * this.checkgroup[i].number;
+                    // console.log(sum);
+                }
+                return sum;
+            },
+            handleDel(data) {
+                data.number--;
+                if (data.number === -1) {
+                    data.number = 0;
+                }
+            },
+            handelAllchecked() {
+                if (this.isChecked) {
+                    this.checkgroup = this.datalist;
+                } else {
+                    this.checkgroup = [];
+                }
+            },
+            handelJudge() {
+                if (this.checkgroup.length === this.datalist.length) {
+                    this.isChecked = true;
+                } else {
+                    this.isChecked = false;
+                }
+            }
+        }
+    })
+    var vm = new Vue({
+        el: "#box",
+
+    })
+</script>
+
+</html>
